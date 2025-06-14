@@ -157,6 +157,13 @@
       "slouching_count": 0,
       "good_percentage": 90.0,
       "quote": "Almost perfect, Akshat! You're 90% straight, and 10% slouching. Fix that last 10%, and you'll be \"Pain-free, and stress-free, at last!\""
+    },
+    {
+      "timestamp": "2025-06-15T01:18:21.635006",
+      "good_posture_count": 4,
+      "slouching_count": 1,
+      "good_percentage": 40.0,
+      "quote": "Not bad, but not great either, Akshat! Get back to basics, and \"Sit up straight, no more slouching around\"!"
     }
   ]
 }

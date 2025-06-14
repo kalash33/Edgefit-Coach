@@ -302,6 +302,24 @@
       "slouching_count": 1,
       "good_posture_percentage": 90.0,
       "average_posture_ratio": 0.592
+    },
+    {
+      "window_end_time": "2025-06-15T01:18:05.815860",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 4,
+      "slouching_count": 6,
+      "good_posture_percentage": 40.0,
+      "average_posture_ratio": 0.358
+    },
+    {
+      "window_end_time": "2025-06-15T01:18:35.874483",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 9,
+      "slouching_count": 1,
+      "good_posture_percentage": 90.0,
+      "average_posture_ratio": 0.138
     }
   ]
 }

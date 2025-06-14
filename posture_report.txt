@@ -1,0 +1,53 @@
+======================================================================
+POSTURE MONITORING REPORT
+======================================================================
+Generated: 2025-06-15 01:08:06
+
+OVERALL QUALITY ASSESSMENT
+----------------------------------------
+Rating: Fair ⚠️
+Overall Score: 57.0/100
+Good Posture: 57.0%
+
+KEY STATISTICS
+----------------------------------------
+Total Sessions: 33
+Total Monitoring Time: 16.5 minutes
+Total Good Posture Readings: 188
+Total Slouching Readings: 142
+Total Readings: 330
+
+PERFORMANCE METRICS
+----------------------------------------
+Best Session: 100.0%
+Worst Session: 0.0%
+Average Session: 57.0%
+Consistency Score: 71.9/100
+
+SESSION QUALITY BREAKDOWN
+----------------------------------------
+Excellent Sessions (>=80%): 9
+Good Sessions (50-79%): 13
+Poor Sessions (<50%): 11
+
+Quality Distribution:
+  Excellent: 27.3%
+  Good: 39.4%
+  Poor: 33.3%
+
+IMPROVEMENT TRENDS
+----------------------------------------
+Overall Trend: Declining
+Improvement Rate: -18.0%
+Recent Performance: 56.0% (last 5 sessions)
+
+RECOMMENDATIONS
+----------------------------------------
+1. Significant improvement needed. Consider ergonomic adjustments.
+2. Declining trend detected. Take more frequent breaks and check your setup.
+3. Consider adjusting your chair height and monitor position.
+4. Focus on reducing poor posture sessions through better workspace ergonomics.
+
+======================================================================
+End of Report
+======================================================================
