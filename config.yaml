@@ -1,0 +1,5 @@
+api_key: "67YNEEJ-TW9M928-NVZF4BH-KMFFB9C"
+model_server_base_url: "http://localhost:3001/api/v1"
+workspace_slug: "edgefit"
+stream: true
+stream_timeout: 60 

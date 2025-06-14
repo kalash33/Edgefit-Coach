@@ -1,0 +1,307 @@
+{
+  "metadata": {
+    "created": "2025-06-14T22:40:57.659902",
+    "log_interval_seconds": 3.0,
+    "window_duration_seconds": 30.0,
+    "description": "Posture monitoring summary log - one entry per 30-second window"
+  },
+  "summary_logs": [
+    {
+      "window_end_time": "2025-06-14T22:41:42.612607",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 9,
+      "slouching_count": 1,
+      "good_posture_percentage": 90.0,
+      "average_posture_ratio": 0.522
+    },
+    {
+      "window_end_time": "2025-06-14T22:42:12.704489",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.488
+    },
+    {
+      "window_end_time": "2025-06-14T22:42:42.834487",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.514
+    },
+    {
+      "window_end_time": "2025-06-14T22:44:03.302884",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 6,
+      "slouching_count": 4,
+      "good_posture_percentage": 60.0,
+      "average_posture_ratio": 0.428
+    },
+    {
+      "window_end_time": "2025-06-14T22:48:10.234394",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 1,
+      "slouching_count": 9,
+      "good_posture_percentage": 10.0,
+      "average_posture_ratio": 0.384
+    },
+    {
+      "window_end_time": "2025-06-14T22:48:40.358866",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 5,
+      "slouching_count": 5,
+      "good_posture_percentage": 50.0,
+      "average_posture_ratio": 0.48
+    },
+    {
+      "window_end_time": "2025-06-14T22:49:10.520001",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 10,
+      "slouching_count": 0,
+      "good_posture_percentage": 100.0,
+      "average_posture_ratio": 0.545
+    },
+    {
+      "window_end_time": "2025-06-14T22:49:40.695762",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 10,
+      "slouching_count": 0,
+      "good_posture_percentage": 100.0,
+      "average_posture_ratio": 0.608
+    },
+    {
+      "window_end_time": "2025-06-14T22:50:10.901952",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 8,
+      "slouching_count": 2,
+      "good_posture_percentage": 80.0,
+      "average_posture_ratio": 0.49
+    },
+    {
+      "window_end_time": "2025-06-14T23:22:33.411641",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.439
+    },
+    {
+      "window_end_time": "2025-06-14T23:43:11.432811",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 8,
+      "slouching_count": 2,
+      "good_posture_percentage": 80.0,
+      "average_posture_ratio": 0.548
+    },
+    {
+      "window_end_time": "2025-06-14T23:43:41.637708",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.508
+    },
+    {
+      "window_end_time": "2025-06-14T23:44:11.877683",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 8,
+      "slouching_count": 2,
+      "good_posture_percentage": 80.0,
+      "average_posture_ratio": 0.53
+    },
+    {
+      "window_end_time": "2025-06-14T23:44:42.060382",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 4,
+      "slouching_count": 6,
+      "good_posture_percentage": 40.0,
+      "average_posture_ratio": 0.411
+    },
+    {
+      "window_end_time": "2025-06-14T23:45:12.220201",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 6,
+      "slouching_count": 4,
+      "good_posture_percentage": 60.0,
+      "average_posture_ratio": 0.452
+    },
+    {
+      "window_end_time": "2025-06-14T23:45:42.431599",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 3,
+      "slouching_count": 7,
+      "good_posture_percentage": 30.0,
+      "average_posture_ratio": 0.374
+    },
+    {
+      "window_end_time": "2025-06-14T23:46:12.569630",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 1,
+      "slouching_count": 9,
+      "good_posture_percentage": 10.0,
+      "average_posture_ratio": 0.395
+    },
+    {
+      "window_end_time": "2025-06-14T23:52:20.706037",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 3,
+      "slouching_count": 7,
+      "good_posture_percentage": 30.0,
+      "average_posture_ratio": 0.533
+    },
+    {
+      "window_end_time": "2025-06-14T23:52:50.878630",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 4,
+      "slouching_count": 6,
+      "good_posture_percentage": 40.0,
+      "average_posture_ratio": 0.45
+    },
+    {
+      "window_end_time": "2025-06-14T23:56:19.415957",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 6,
+      "slouching_count": 4,
+      "good_posture_percentage": 60.0,
+      "average_posture_ratio": 0.468
+    },
+    {
+      "window_end_time": "2025-06-14T23:56:49.557613",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 1,
+      "slouching_count": 9,
+      "good_posture_percentage": 10.0,
+      "average_posture_ratio": 0.42
+    },
+    {
+      "window_end_time": "2025-06-14T23:57:19.757086",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 3,
+      "slouching_count": 7,
+      "good_posture_percentage": 30.0,
+      "average_posture_ratio": 0.381
+    },
+    {
+      "window_end_time": "2025-06-14T23:58:50.000197",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 2,
+      "slouching_count": 8,
+      "good_posture_percentage": 20.0,
+      "average_posture_ratio": 0.345
+    },
+    {
+      "window_end_time": "2025-06-14T23:59:20.101378",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 8,
+      "slouching_count": 2,
+      "good_posture_percentage": 80.0,
+      "average_posture_ratio": 0.479
+    },
+    {
+      "window_end_time": "2025-06-14T23:59:50.248666",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 4,
+      "slouching_count": 6,
+      "good_posture_percentage": 40.0,
+      "average_posture_ratio": 0.44
+    },
+    {
+      "window_end_time": "2025-06-15T00:00:20.436742",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 5,
+      "slouching_count": 5,
+      "good_posture_percentage": 50.0,
+      "average_posture_ratio": 0.449
+    },
+    {
+      "window_end_time": "2025-06-15T00:00:50.609263",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 10,
+      "slouching_count": 0,
+      "good_posture_percentage": 100.0,
+      "average_posture_ratio": 0.557
+    },
+    {
+      "window_end_time": "2025-06-15T00:02:06.389297",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.493
+    },
+    {
+      "window_end_time": "2025-06-15T00:02:36.636260",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 7,
+      "slouching_count": 3,
+      "good_posture_percentage": 70.0,
+      "average_posture_ratio": 0.515
+    },
+    {
+      "window_end_time": "2025-06-15T00:03:06.891347",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 6,
+      "slouching_count": 4,
+      "good_posture_percentage": 60.0,
+      "average_posture_ratio": 0.44
+    },
+    {
+      "window_end_time": "2025-06-15T00:03:37.098233",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 0,
+      "slouching_count": 10,
+      "good_posture_percentage": 0.0,
+      "average_posture_ratio": 0.338
+    },
+    {
+      "window_end_time": "2025-06-15T00:04:07.309664",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 6,
+      "slouching_count": 4,
+      "good_posture_percentage": 60.0,
+      "average_posture_ratio": 0.514
+    },
+    {
+      "window_end_time": "2025-06-15T00:04:39.802486",
+      "window_duration_minutes": 0.5,
+      "total_readings": 10,
+      "good_posture_count": 9,
+      "slouching_count": 1,
+      "good_posture_percentage": 90.0,
+      "average_posture_ratio": 0.592
+    }
+  ]
+}

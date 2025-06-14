@@ -1,0 +1,162 @@
+{
+  "metadata": {
+    "created": "2025-06-14T23:42:41.291442",
+    "description": "AI-generated motivational quotes based on posture performance"
+  },
+  "quotes": [
+    {
+      "timestamp": "2025-06-14T23:43:27.866993",
+      "good_posture_count": 2,
+      "slouching_count": 3,
+      "good_percentage": 80.0,
+      "quote": "Good job on maintaining good posture, Akshat! Here's a motivational quote to keep you going:\n\n\"Don't watch the clock; do what it does. Keep going.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:44:00.448526",
+      "good_posture_count": 5,
+      "slouching_count": 1,
+      "good_percentage": 70.0,
+      "quote": "You're improving, Akshat! Here's a motivational quote to help you keep going:\n\n\"Believe you can and you're halfway there.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:44:33.485458",
+      "good_posture_count": 3,
+      "slouching_count": 4,
+      "good_percentage": 80.0,
+      "quote": "You're getting closer to perfect posture, Akshat! Here's a motivational quote to keep you motivated:\n\n\"You don't have to be great to start, but you have to start to be great.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:45:01.820356",
+      "good_posture_count": 3,
+      "slouching_count": 3,
+      "good_percentage": 40.0,
+      "quote": "Keep working on it, Akshat! Here's a motivational quote for good posture:\n\n\"Stand tall, not for the sake of others, but for your own strength.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:45:31.590523",
+      "good_posture_count": 0,
+      "slouching_count": 6,
+      "good_percentage": 60.0,
+      "quote": "You're making progress, Akshat! Here's a motivational quote for good posture:\n\n\"Straighten your posture, and your confidence will too.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:46:02.239686",
+      "good_posture_count": 0,
+      "slouching_count": 6,
+      "good_percentage": 30.0,
+      "quote": "You've got this, Akshat! Here's a motivational quote to help you improve your posture:\n\n\"Every step forward is a step up.\""
+    },
+    {
+      "timestamp": "2025-06-14T23:52:38.936442",
+      "good_posture_count": 3,
+      "slouching_count": 3,
+      "good_percentage": 30.0,
+      "quote": "Keep working on it, Akshat! Try to sit or stand up straight with your shoulders relaxed and down, and your ears in line with your shoulders. Remember, good posture is a habit that gets stronger with practice!"
+    },
+    {
+      "timestamp": "2025-06-14T23:53:08.008247",
+      "good_posture_count": 1,
+      "slouching_count": 4,
+      "good_percentage": 40.0,
+      "quote": "You're on the right track, Akshat! Keep remembering to stretch your shoulders back and down, and relax your neck and shoulders, and you'll be standing taller in no time!"
+    },
+    {
+      "timestamp": "2025-06-14T23:56:34.423642",
+      "good_posture_count": 0,
+      "slouching_count": 4,
+      "good_percentage": 60.0,
+      "quote": "You're almost there, Akshat! \"A little correction now makes a big difference later.\" Keep working at it!"
+    },
+    {
+      "timestamp": "2025-06-14T23:57:04.072551",
+      "good_posture_count": 2,
+      "slouching_count": 2,
+      "good_percentage": 10.0,
+      "quote": "You've got a lot of work to do, Akshat! Time to \"Straighten up and turn it around!\""
+    },
+    {
+      "timestamp": "2025-06-14T23:57:34.361366",
+      "good_posture_count": 1,
+      "slouching_count": 3,
+      "good_percentage": 30.0,
+      "quote": "Time to \"Stand up to the challenge!\" Keep working on that posture!"
+    },
+    {
+      "timestamp": "2025-06-14T23:59:08.807324",
+      "good_posture_count": 6,
+      "slouching_count": 0,
+      "good_percentage": 20.0,
+      "quote": "It's time to \"Straighten up, seriously!\" Good posture is a habit, not a choice, so make it a habit! Stand up straight now!"
+    },
+    {
+      "timestamp": "2025-06-14T23:59:36.942723",
+      "good_posture_count": 3,
+      "slouching_count": 2,
+      "good_percentage": 80.0,
+      "quote": "You're really close, Akshat! Here's a motivational quote to keep you going: \"Almost there, don't let the slack creep in now!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:00:04.865857",
+      "good_posture_count": 1,
+      "slouching_count": 3,
+      "good_percentage": 40.0,
+      "quote": "Keep pushing, Akshat! \"Stand tall, not for a few, but for all!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:00:33.287017",
+      "good_posture_count": 4,
+      "slouching_count": 0,
+      "good_percentage": 50.0,
+      "quote": "Time to \"Balance the books, balance your back!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:01:04.272091",
+      "good_posture_count": 4,
+      "slouching_count": 0,
+      "good_percentage": 100.0,
+      "quote": "You're perfect, Akshat! \"Keep standing tall, you've got it nailed!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:02:22.814335",
+      "good_posture_count": 3,
+      "slouching_count": 2,
+      "good_percentage": 70.0,
+      "quote": "Good effort, Akshat! \"Sit right, stay tight, strong all day!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:02:55.710382",
+      "good_posture_count": 6,
+      "slouching_count": 0,
+      "good_percentage": 70.0,
+      "quote": "Not bad, but not great either, Akshat! However, sitting 3 out of 10 times slouching is a sign of slouching too much. Time to \"Sit up straight, no more slouching around!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:03:21.232013",
+      "good_posture_count": 0,
+      "slouching_count": 4,
+      "good_percentage": 60.0,
+      "quote": "Don't slouch, Akshat! \"Straighten up, this is not a couch!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:03:54.471189",
+      "good_posture_count": 1,
+      "slouching_count": 4,
+      "good_percentage": 0.0,
+      "quote": "What's going on, Akshat?! You're practically comatose! \"Sit up, straight up! Your back will thank you, or hurt you!\" Get a straight back, now!"
+    },
+    {
+      "timestamp": "2025-06-15T00:04:23.990013",
+      "good_posture_count": 5,
+      "slouching_count": 0,
+      "good_percentage": 60.0,
+      "quote": "Get back on track, Akshat! You're 40% right, but 40% wrong. You need to \"Sit straight, or your back will cry!\""
+    },
+    {
+      "timestamp": "2025-06-15T00:05:00.445708",
+      "good_posture_count": 0,
+      "slouching_count": 0,
+      "good_percentage": 90.0,
+      "quote": "Almost perfect, Akshat! You're 90% straight, and 10% slouching. Fix that last 10%, and you'll be \"Pain-free, and stress-free, at last!\""
+    }
+  ]
+}

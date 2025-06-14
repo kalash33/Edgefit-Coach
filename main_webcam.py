@@ -3,6 +3,12 @@ import mediapipe as mp
 import time
 import os
 import numpy as np
+import json
+from datetime import datetime
+from collections import deque
+from typing import Dict, List, Optional
+import threading
+from llm_handler import ask_llm, is_error_response
 
 # ONNX Runtime imports for optimized model inference
 try:
@@ -12,6 +18,231 @@ except ImportError:
     ONNX_AVAILABLE = False
     print("⚠️  ONNX Runtime not available, falling back to standard inference")
 
+
+class PostureLogger:
+    """
+    Handles discrete 30-second window posture logging.
+    Counts good/slouch postures every 3 seconds, logs summary every 30 seconds, then resets.
+    """
+    
+    def __init__(self, log_interval=3.0, window_duration=30.0, summary_file="posture_summary.json", motivation_file="motivation_quotes.json"):
+        """
+        Initialize the posture logger.
+        
+        Args:
+            log_interval (float): Time interval between posture readings (seconds)
+            window_duration (float): Window duration before logging and reset (seconds) 
+            summary_file (str): Path to summary log file
+            motivation_file (str): Path to motivation quotes file
+        """
+        self.log_interval = log_interval
+        self.window_duration = window_duration
+        self.summary_file = summary_file
+        self.motivation_file = motivation_file
+        
+        # Simple counters for current window
+        self.good_posture_count = 0
+        self.slouching_count = 0
+        self.total_posture_ratio = 0.0
+        
+        # Timing variables
+        self.last_log_time = time.time()
+        self.window_start_time = time.time()
+        
+        # Initialize summary log file
+        self._initialize_summary_file()
+        self._initialize_motivation_file()
+        
+        print(f"📊 PostureLogger initialized:")
+        print(f"   - Log interval: {log_interval}s")
+        print(f"   - Window duration: {window_duration}s ({window_duration/60:.1f} minutes)")
+        print(f"   - Summary log: {summary_file}")
+        print(f"   - Motivation log: {motivation_file}")
+        print(f"   - Mode: Discrete windows (reset every 30 seconds)")
+    
+    def _initialize_summary_file(self):
+        """Initialize the summary log file with proper structure."""
+        if not os.path.exists(self.summary_file):
+            initial_data = {
+                "metadata": {
+                    "created": datetime.now().isoformat(),
+                    "log_interval_seconds": self.log_interval,
+                    "window_duration_seconds": self.window_duration,
+                    "description": "Posture monitoring summary log - one entry per 30-second window"
+                },
+                "summary_logs": []
+            }
+            with open(self.summary_file, 'w') as f:
+                json.dump(initial_data, f, indent=2)
+            print(f"✅ Created new summary log file: {self.summary_file}")
+    
+    def _initialize_motivation_file(self):
+        """Initialize the motivation quotes file with proper structure."""
+        if not os.path.exists(self.motivation_file):
+            initial_data = {
+                "metadata": {
+                    "created": datetime.now().isoformat(),
+                    "description": "AI-generated motivational quotes based on posture performance"
+                },
+                "quotes": []
+            }
+            with open(self.motivation_file, 'w') as f:
+                json.dump(initial_data, f, indent=2)
+            print(f"✅ Created new motivation file: {self.motivation_file}")
+    
+    def should_log_posture(self) -> bool:
+        """Check if it's time to log a new posture reading."""
+        current_time = time.time()
+        return (current_time - self.last_log_time) >= self.log_interval
+    
+    def log_posture_reading(self, is_good_posture: bool, posture_ratio: float):
+        """
+        Log a single posture reading by incrementing counters.
+        
+        Args:
+            is_good_posture (bool): True if posture is good, False if slouching
+            posture_ratio (float): The calculated posture ratio
+        """
+        current_time = time.time()
+        
+        # Increment appropriate counter
+        if is_good_posture:
+            self.good_posture_count += 1
+        else:
+            self.slouching_count += 1
+        
+        # Add to running total for average calculation
+        self.total_posture_ratio += posture_ratio
+        
+        # Update last log time
+        self.last_log_time = current_time
+        
+        # Check if 30-second window is complete
+        if (current_time - self.window_start_time) >= self.window_duration:
+            self._create_summary_log()
+            # Generate motivation quote asynchronously
+            self._generate_motivation_async()
+            self._reset_window()
+    
+    def _create_summary_log(self):
+        """Create and save a summary log entry for the completed 30-second window."""
+        total_readings = self.good_posture_count + self.slouching_count
+        
+        if total_readings == 0:
+            return  # No readings in this window
+        
+        # Calculate statistics
+        good_posture_percentage = (self.good_posture_count / total_readings * 100)
+        avg_posture_ratio = self.total_posture_ratio / total_readings
+        
+        # Create summary entry (clean and simple)
+        summary_entry = {
+            "window_end_time": datetime.now().isoformat(),
+            "window_duration_minutes": self.window_duration / 60,
+            "total_readings": total_readings,
+            "good_posture_count": self.good_posture_count,
+            "slouching_count": self.slouching_count,
+            "good_posture_percentage": round(good_posture_percentage, 1),
+            "average_posture_ratio": round(avg_posture_ratio, 3)
+        }
+        
+        # Save summary entry
+        self._save_summary_to_file(summary_entry)
+        
+        print(f"📈 Logged 30-second window: {self.good_posture_count} good, {self.slouching_count} slouching ({good_posture_percentage:.1f}% good)")
+    
+    def _reset_window(self):
+        """Reset counters and start a new 30-second window."""
+        self.good_posture_count = 0
+        self.slouching_count = 0
+        self.total_posture_ratio = 0.0
+        self.window_start_time = time.time()
+        print(f"🔄 Starting new 30-second window...")
+    
+    def _save_summary_to_file(self, summary_entry: Dict):
+        """Save the summary entry to the summary JSON log file."""
+        try:
+            # Read existing data
+            with open(self.summary_file, 'r') as f:
+                data = json.load(f)
+            
+            # Add new entry
+            data["summary_logs"].append(summary_entry)
+            
+            # Write back to file
+            with open(self.summary_file, 'w') as f:
+                json.dump(data, f, indent=2)
+                
+        except Exception as e:
+            print(f"❌ Error saving to summary log file: {e}")
+    
+    def _generate_motivation_async(self):
+        """Generate motivational quote asynchronously based on current window performance."""
+        # Start async thread to avoid blocking main loop
+        thread = threading.Thread(target=self._generate_motivation_quote, daemon=True)
+        thread.start()
+    
+    def _generate_motivation_quote(self):
+        """Generate and save motivational quote based on posture performance."""
+        try:
+            total_readings = self.good_posture_count + self.slouching_count
+            if total_readings == 0:
+                return
+            
+            good_percentage = (self.good_posture_count / total_readings * 100)
+            
+            # Create short prompt for LLM
+
+            prompt = f"While sitting in front of laptop, out of 10 time interval measurements, i got {self.good_posture_count} good, {self.slouching_count} slouch posture. Short witty motivational quote for correcting posture or improvement if needed. When very bad then give strict angry response to quickly correct and how to. Give overall short response, based on performance suggest."
+
+            # Call LLM
+            response = ask_llm(prompt)
+            
+            if not is_error_response(response):
+                # Save quote to file
+                quote_entry = {
+                    "timestamp": datetime.now().isoformat(),
+                    "good_posture_count": self.good_posture_count,
+                    "slouching_count": self.slouching_count,
+                    "good_percentage": round(good_percentage, 1),
+                    "quote": response.strip()
+                }
+                
+                self._save_motivation_to_file(quote_entry)
+                print(f"💬 AI Quote: {response.strip()}")
+            else:
+                print(f"❌ LLM Error: {response}")
+                
+        except Exception as e:
+            print(f"❌ Error generating motivation quote: {e}")
+    
+    def _save_motivation_to_file(self, quote_entry: Dict):
+        """Save the motivation quote to the JSON file."""
+        try:
+            # Read existing data
+            with open(self.motivation_file, 'r') as f:
+                data = json.load(f)
+            
+            # Add new quote
+            data["quotes"].append(quote_entry)
+            
+            # Write back to file
+            with open(self.motivation_file, 'w') as f:
+                json.dump(data, f, indent=2)
+                
+        except Exception as e:
+            print(f"❌ Error saving motivation quote: {e}")
+    
+    def get_current_window_stats(self) -> Dict:
+        """Get statistics for the current 30-second window."""
+        total_readings = self.good_posture_count + self.slouching_count
+        
+        return {
+            "total_readings": total_readings,
+            "good_posture_count": self.good_posture_count,
+            "slouching_count": self.slouching_count,
+            "good_posture_percentage": round((self.good_posture_count / total_readings * 100), 1) if total_readings > 0 else 0
+        }
 
 
 class PoseDetector():
@@ -163,6 +394,14 @@ def main():
     # Initialize pose detector
     detector = PoseDetector()
     
+    # Initialize posture logger
+    posture_logger = PostureLogger(
+        log_interval=3.0,      # Log every 3 seconds
+        window_duration=30.0,  # 30-second window
+        summary_file="posture_summary.json",  # Clean summary log only
+        motivation_file="motivation_quotes.json"  # AI motivation quotes
+    )
+    
     pTime = 0
     cTime = 0
     
@@ -179,10 +418,12 @@ def main():
     print("   - Press 's' to show/hide landmark positions")
     print("   - Press 'r' to reset pose detector")
     print("   - Press 'p' to toggle posture detection")
+    print("   - Press 'l' to toggle logging")
     print("=" * 50)
     
     show_landmarks = False
     posture_detection_enabled = True
+    logging_enabled = True
     
     try:
         while True:
@@ -230,7 +471,9 @@ def main():
                 current_time = time.time()
                 
                 # Check if posture is bad (ratio is too small)
-                if posture_ratio < posture_threshold_percentage:
+                is_good_posture = posture_ratio >= posture_threshold_percentage
+                
+                if not is_good_posture:
                     bad_posture_duration += current_time - last_posture_check_time
                     posture_status = "SLOUCHING"
                     status_color = (0, 0, 255)  # Red
@@ -246,9 +489,30 @@ def main():
                 
                 last_posture_check_time = current_time
                 
+                # Log posture data if logging is enabled
+                if logging_enabled and posture_logger.should_log_posture():
+                    posture_logger.log_posture_reading(
+                        is_good_posture=is_good_posture,
+                        posture_ratio=posture_ratio
+                    )
+                
                 # Display continuous posture status
                 cv2.putText(img, f"Status: {posture_status}", (10, 110), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, status_color, 2)
+                
+                # Display logging statistics if logging is enabled
+                if logging_enabled:
+                    stats = posture_logger.get_current_window_stats()
+                    cv2.putText(img, f"Logging: ON", (10, 140), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+                    cv2.putText(img, f"30s Window: {stats['good_posture_count']}G/{stats['slouching_count']}S", 
+                               (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                    if stats['total_readings'] > 0:
+                        cv2.putText(img, f"Good: {stats['good_posture_percentage']}%", 
+                                   (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                else:
+                    cv2.putText(img, f"Logging: OFF", (10, 140), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (128, 128, 128), 2)
                 
                 # Show alert if bad posture detected for too long
                 if show_posture_alert:
@@ -284,6 +548,13 @@ def main():
                 # Reset posture variables when toggling
                 bad_posture_duration = 0
                 show_posture_alert = False
+            elif key == ord('l'):
+                logging_enabled = not logging_enabled
+                status = "ON" if logging_enabled else "OFF"
+                print(f"📊 Posture logging: {status}")
+                if logging_enabled:
+                    print("   - Logging every 3 seconds to posture_log.json")
+                    print("   - Rolling 2-minute window analysis")
                 
     except KeyboardInterrupt:
         print("\n⏹️  Interrupted by user")
