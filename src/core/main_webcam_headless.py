@@ -300,7 +300,7 @@ class PostureLogger:
         """Save motivation quote to the JSON file."""
         try:
             # Read existing data
-            with open(self.motivation_file, 'r') as f:
+            with open(self.motivation_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
             # Add new quote
@@ -311,7 +311,7 @@ class PostureLogger:
                 data['quotes'] = data['quotes'][-50:]
             
             # Write back to file
-            with open(self.motivation_file, 'w') as f:
+            with open(self.motivation_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2)
                 
         except Exception as e:

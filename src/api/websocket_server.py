@@ -34,27 +34,60 @@ def monitor_motivation_file():
     while True:
         try:
             if os.path.exists(motivation_file):
-                with open(motivation_file, 'r') as f:
+                # Check file size first to avoid reading empty/corrupted files
+                if os.path.getsize(motivation_file) < 10:
+                    print(f"⚠️ Motivation file too small, skipping: {motivation_file}")
+                    time.sleep(2)
+                    continue
+                    
+                with open(motivation_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     quotes = data.get('quotes', [])
                     
                     if len(quotes) > last_quote_count:
                         # New quote available
                         new_quote = quotes[-1]  # Get the latest quote
-                        print(f"💬 New AI quote detected: {new_quote.get('quote', 'Unknown')}")
+                        print(f"💬 New AI quote detected: {new_quote.get('quote', 'Unknown')[:50]}...")
                         
-                        # Add to queue for broadcasting
+                        # Add to queue for broadcasting (thread-safe)
                         if quote_queue:
                             try:
+                                # Use put_nowait since we're in a thread
                                 quote_queue.put_nowait(new_quote)
-                                print(f"📤 Added quote to broadcast queue")
-                            except:
-                                print(f"⚠️ Quote queue is full, skipping")
+                                print(f"📤 Added quote to broadcast queue (queue size: {quote_queue.qsize()})")
+                            except asyncio.QueueFull:
+                                print(f"⚠️ Quote queue is full ({quote_queue.maxsize}), clearing old items")
+                                # Clear some old items from queue
+                                try:
+                                    for _ in range(5):  # Remove 5 old items
+                                        try:
+                                            quote_queue.get_nowait()
+                                        except asyncio.QueueEmpty:
+                                            break
+                                    quote_queue.put_nowait(new_quote)  # Add new quote
+                                    print(f"✅ Added quote after clearing queue")
+                                except Exception as clear_error:
+                                    print(f"❌ Could not clear queue: {clear_error}")
+                            except Exception as e:
+                                print(f"❌ Error adding to queue: {e}")
                         
                         last_quote_count = len(quotes)
+            else:
+                print(f"⚠️ Motivation file not found: {motivation_file}")
             
             time.sleep(1)  # Check every 1 second
             
+        except json.JSONDecodeError as e:
+            print(f"❌ JSON parsing error in motivation file: {e}")
+            print(f"🔧 Attempting to fix corrupted file...")
+            try:
+                # Try to recreate the file with proper structure
+                with open(motivation_file, 'w', encoding='utf-8') as f:
+                    json.dump({"quotes": []}, f, indent=2)
+                print(f"✅ Fixed corrupted motivation file")
+            except Exception as fix_error:
+                print(f"❌ Could not fix file: {fix_error}")
+            time.sleep(5)
         except Exception as e:
             print(f"❌ Error monitoring motivation file: {e}")
             time.sleep(5)
@@ -130,7 +163,7 @@ async def handle_client(websocket):
         try:
             motivation_file = os.path.join(DATA_DIR, "motivation_quotes.json")
             if os.path.exists(motivation_file):
-                with open(motivation_file, 'r') as f:
+                with open(motivation_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     quotes = data.get('quotes', [])
                     if quotes:
@@ -205,8 +238,8 @@ async def main():
     print("=" * 50)
     
     # Initialize the queue in the async context
-    quote_queue = asyncio.Queue(maxsize=10)
-    print("📬 Quote broadcast queue initialized")
+    quote_queue = asyncio.Queue(maxsize=50)  # Increased from 10 to 50
+    print("📬 Quote broadcast queue initialized (maxsize=50)")
     
     # Start file monitoring
     start_file_monitor()

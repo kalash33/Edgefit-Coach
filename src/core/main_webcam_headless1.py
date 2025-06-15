@@ -401,14 +401,14 @@ class PostureLogger:
         """Save the summary entry to the summary JSON log file."""
         try:
             # Read existing data
-            with open(self.summary_file, 'r') as f:
+            with open(self.summary_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
             # Add new entry
             data["summary_logs"].append(summary_entry)
             
             # Write back to file
-            with open(self.summary_file, 'w') as f:
+            with open(self.summary_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2)
                 
         except Exception as e:
@@ -433,8 +433,105 @@ class PostureLogger:
 
             prompt = f"While sitting in front of laptop, out of 10 time interval measurements, i got {self.good_posture_count} good, {self.slouching_count} slouch posture. Short witty motivational quote for correcting posture or improvement if needed. When very bad then give strict angry response to quickly correct and how to. Give overall medium-short response, based on performance suggest."
 
-            # Call LLM
-            response = ask_llm(prompt)
+            # Get current language setting for multilingual responses
+            current_language = "en"  # Default
+            try:
+                # Method 1: Try to get from translator
+                import sys
+                import os
+                # Get the project root directory properly
+                project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                sys.path.insert(0, os.path.join(project_root, 'src'))
+                
+                from utils.sarvam_translator import get_translator
+                translator = get_translator()
+                current_language = translator.get_current_language()
+                print(f"🌐 Current language detected from translator: {current_language}")
+                
+            except Exception as e:
+                print(f"⚠️ Error getting language from translator: {e}")
+                
+            # Method 2: Directly read language state file as fallback
+            try:
+                project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                lang_state_file = os.path.join(project_root, "temp", "language_state.json")
+                print(f"🔍 Looking for language state file: {lang_state_file}")
+                if os.path.exists(lang_state_file):
+                    with open(lang_state_file, 'r', encoding='utf-8') as f:
+                        lang_data = json.load(f)
+                        file_language = lang_data.get('current_language', 'en')
+                        if file_language != current_language:
+                            current_language = file_language
+                            print(f"🌐 Language updated from state file: {current_language}")
+                else:
+                    print(f"⚠️ Language state file not found: {lang_state_file}")
+                    
+            except Exception as e:
+                print(f"⚠️ Error reading language state file: {e}")
+                
+            print(f"🌐 Final language for AI response: {current_language}")
+            
+            # Call LLM with language support
+            response = ask_llm(prompt, target_language=current_language)
+            
+            # If LLM fails, use fallback multilingual quotes
+            if is_error_response(response):
+                print(f"❌ LLM Error: {response}")
+                print("🔄 Using fallback multilingual quotes...")
+                
+                # Fallback motivational quotes in multiple languages
+                fallback_quotes = {
+                    "en": {
+                        "good": [
+                            "Excellent posture! Keep it up! 💪",
+                            "Perfect posture! You're doing great! ✨",
+                            "Outstanding! Your posture is on point! 🎯"
+                        ],
+                        "mixed": [
+                            "Good effort! Just a few slouches to fix. Sit up straight! 📏",
+                            "Almost perfect! Straighten up those shoulders! 💪",
+                            "You're doing well, just mind your posture! ⚡"
+                        ],
+                        "poor": [
+                            "⚠️ POSTURE ALERT! Sit up straight NOW! Your back will thank you! 🚨",
+                            "🔥 URGENT: Fix your posture! Shoulders back, chest up! 💪",
+                            "❗ SLOUCH ALERT! Stand tall and own your space! 🏆"
+                        ]
+                    },
+                    "hi": {
+                        "good": [
+                            "बेहतरीन मुद्रा! इसे बनाए रखें! 💪",
+                            "परफेक्ट पोस्चर! आप बहुत अच्छा कर रहे हैं! ✨",
+                            "शानदार! आपकी मुद्रा बिल्कुल सही है! 🎯"
+                        ],
+                        "mixed": [
+                            "अच्छी कोशिश! बस कुछ झुकाव ठीक करना है। सीधे बैठें! 📏",
+                            "लगभग परफेक्ट! अपने कंधे सीधे करें! 💪",
+                            "आप अच्छा कर रहे हैं, बस अपनी मुद्रा का ध्यान रखें! ⚡"
+                        ],
+                        "poor": [
+                            "⚠️ मुद्रा अलर्ट! अभी सीधे बैठें! आपकी पीठ आपको धन्यवाद देगी! 🚨",
+                            "🔥 तुरंत: अपनी मुद्रा ठीक करें! कंधे पीछे, छाती आगे! 💪",
+                            "❗ झुकाव अलर्ट! लंबे खड़े हों और अपनी जगह पर कब्जा करें! 🏆"
+                        ]
+                    }
+                }
+                
+                # Determine quote category based on performance
+                if good_percentage >= 80:
+                    category = "good"
+                elif good_percentage >= 50:
+                    category = "mixed"
+                else:
+                    category = "poor"
+                
+                # Get fallback quote in current language
+                lang_quotes = fallback_quotes.get(current_language, fallback_quotes["en"])
+                import random
+                response = random.choice(lang_quotes[category])
+                print(f"💬 Fallback Quote ({current_language}): {response}")
+            else:
+                print(f"💬 LLM Quote ({current_language}): {response.strip()}")
             
             if not is_error_response(response):
                 # Save quote to file
@@ -476,18 +573,26 @@ class PostureLogger:
         """Save the motivation quote to the JSON file."""
         try:
             # Read existing data
-            with open(self.motivation_file, 'r') as f:
+            with open(self.motivation_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
             # Add new quote
             data["quotes"].append(quote_entry)
             
-            # Write back to file
-            with open(self.motivation_file, 'w') as f:
-                json.dump(data, f, indent=2)
+            # Write back to file with UTF-8 encoding
+            with open(self.motivation_file, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
                 
         except Exception as e:
             print(f"❌ Error saving motivation quote: {e}")
+            # Try to recreate the file if it's corrupted
+            try:
+                print("🔧 Attempting to recreate motivation file...")
+                with open(self.motivation_file, 'w', encoding='utf-8') as f:
+                    json.dump({"quotes": [quote_entry]}, f, indent=2, ensure_ascii=False)
+                print("✅ Recreated motivation file with current quote")
+            except Exception as recreate_error:
+                print(f"❌ Could not recreate file: {recreate_error}")
     
     def get_current_window_stats(self) -> Dict:
         """Get statistics for the current 30-second window."""

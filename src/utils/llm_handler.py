@@ -7,22 +7,87 @@ Usage: from llm_handler import ask_llm
 import requests
 import yaml
 import os
+import logging
 
-def ask_llm(prompt):
+# Import translation support
+try:
+    from .sarvam_translator import get_translator, translate_text
+    TRANSLATION_AVAILABLE = True
+except ImportError:
+    TRANSLATION_AVAILABLE = False
+    logging.warning("⚠️ Translation module not available")
+
+# Try to import Sarvam Imagine SDK
+try:
+    from imagine import ChatMessage, ImagineClient
+    SARVAM_SDK_AVAILABLE = True
+    print("✅ Sarvam Imagine SDK available")
+except ImportError:
+    SARVAM_SDK_AVAILABLE = False
+    print("⚠️ Sarvam Imagine SDK not available, using fallback API")
+
+def ask_llm(prompt, target_language=None):
     """
-    Ask the LLM a question and get a response
+    Ask the LLM a question and get a response in the specified language
     
     Args:
         prompt (str): Your question or prompt for the LLM
+        target_language (str, optional): Target language code (e.g., 'hi', 'ta', 'te')
         
     Returns:
         str: The LLM's response, or an error message if something went wrong
         
     Example:
-        response = ask_llm("What is good posture?")
+        response = ask_llm("What is good posture?", target_language="hi")
         if not response.startswith("❌"):
             print(f"LLM says: {response}")
     """
+    
+    # Try Sarvam Imagine SDK first (the working one)
+    if SARVAM_SDK_AVAILABLE:
+        try:
+            print("🚀 Using Sarvam Imagine SDK...")
+            
+            # Initialize Sarvam client
+            client = ImagineClient(
+                api_key="f66499e9-2d54-4adf-85c1-5c9d67a13b1b",
+                endpoint="http://10.190.147.82:5050/v2"
+            )
+            
+            # Add language-specific instruction if target language is specified
+            enhanced_prompt = prompt
+            if target_language and target_language != "en":
+                # Map language codes to language names for better LLM understanding
+                language_names = {
+                    "hi": "Hindi (हिंदी)",
+                    "ta": "Tamil (தமிழ்)",
+                    "te": "Telugu (తెలుగు)",
+                    "bn": "Bengali (বাংলা)",
+                    "gu": "Gujarati (ગુજરાતી)",
+                    "mr": "Marathi (मराठी)",
+                    "kn": "Kannada (ಕನ್ನಡ)"
+                }
+                
+                language_name = language_names.get(target_language, target_language)
+                enhanced_prompt = f"{prompt}\n\nIMPORTANT: Please respond ONLY in {language_name} language. Do not use English at all. Write your entire response in {language_name} script and language."
+            
+            # Make request using Sarvam SDK
+            response = client.chat(
+                messages=[ChatMessage(role="user", content=enhanced_prompt)],
+                model="Sarvam-m"
+            )
+            
+            llm_response = response.first_content
+            print(f"✅ Sarvam SDK response received: {llm_response[:100]}...")
+            return llm_response
+            
+        except Exception as e:
+            print(f"❌ Sarvam SDK error: {e}")
+            # Fall back to original API
+    
+    # Fallback to original API (if Sarvam SDK fails)
+    print("🔄 Falling back to original API...")
+    
     # Find config.yaml in project structure
     config_path = None
     
@@ -51,6 +116,23 @@ def ask_llm(prompt):
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
         
+        # Add language-specific instruction if target language is specified
+        enhanced_prompt = prompt
+        if target_language and target_language != "en":
+            # Map language codes to language names for better LLM understanding
+            language_names = {
+                "hi": "Hindi (हिंदी)",
+                "ta": "Tamil (தமிழ்)",
+                "te": "Telugu (తెలుగు)",
+                "bn": "Bengali (বাংলা)",
+                "gu": "Gujarati (ગુજરાતી)",
+                "mr": "Marathi (मराठी)",
+                "kn": "Kannada (ಕನ್ನಡ)"
+            }
+            
+            language_name = language_names.get(target_language, target_language)
+            enhanced_prompt = f"{prompt}\n\nIMPORTANT: Please respond ONLY in {language_name} language. Do not use English at all. Write your entire response in {language_name} script and language."
+        
         # Make API request
         url = f"{config['model_server_base_url']}/workspace/{config['workspace_slug']}/chat"
         headers = {
@@ -58,7 +140,7 @@ def ask_llm(prompt):
             "Content-Type": "application/json"
         }
         payload = {
-            "message": prompt,
+            "message": enhanced_prompt,
             "mode": "chat", 
             "sessionId": "handler-session",
             "attachments": []
@@ -67,7 +149,8 @@ def ask_llm(prompt):
         response = requests.post(url, headers=headers, json=payload)
         
         if response.status_code == 200:
-            return response.json().get('textResponse', '❌ No response received')
+            llm_response = response.json().get('textResponse', '❌ No response received')
+            return llm_response
         else:
             return f"❌ API Error: {response.status_code}"
             

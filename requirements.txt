@@ -81,4 +81,9 @@ urllib3==2.3.0
 
 # Windows-specific (install conditionally)
 # pywin32>=310; sys_platform == "win32"
-# pypiwin32>=223; sys_platform == "win32" 
+# pypiwin32>=223; sys_platform == "win32"
+
+# Multilingual Support (Sarvam SDK)
+# Install manually: pip install imagine_sdk-0.4.2-py3-none-any.whl
+# imagine_sdk>=0.4.2  # Uncomment after installing wheel file
+# prettyprinter>=0.18.0  # Optional, for pretty printing 

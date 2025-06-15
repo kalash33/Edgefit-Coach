@@ -234,6 +234,7 @@ app.add_middleware(
 # Pydantic models
 class ChatMessage(BaseModel):
     message: str
+    target_language: Optional[str] = None
     timestamp: Optional[str] = None
 
 class ChatResponse(BaseModel):
@@ -466,7 +467,7 @@ def monitor_motivation_quotes():
     while True:
         try:
             if os.path.exists(motivation_file):
-                with open(motivation_file, 'r') as f:
+                with open(motivation_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     quotes = data.get('quotes', [])
                     
@@ -664,8 +665,8 @@ async def chat_message(chat_msg: ChatMessage):
         # Build context-aware prompt
         context_prompt = build_context_prompt(chat_msg.message, chat_data['conversations'])
         
-        # Get response from LLM
-        response = ask_llm(context_prompt)
+        # Get response from LLM with language support
+        response = ask_llm(context_prompt, target_language=chat_msg.target_language)
         
         if is_error_response(response):
             raise HTTPException(status_code=500, detail=f"LLM Error: {response}")
@@ -675,7 +676,8 @@ async def chat_message(chat_msg: ChatMessage):
             "timestamp": datetime.now().isoformat(),
             "user_message": chat_msg.message,
             "assistant_response": response,
-            "conversation_id": f"conv_{int(time.time())}"
+            "conversation_id": f"conv_{int(time.time())}",
+            "language": chat_msg.target_language or "en"
         }
         
         # Add to history

@@ -17,6 +17,16 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
+# Import translation support
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+try:
+    from utils.sarvam_translator import get_translator, t, SUPPORTED_LANGUAGES
+    TRANSLATION_AVAILABLE = True
+except ImportError:
+    TRANSLATION_AVAILABLE = False
+    print("⚠️ Translation module not available")
+
 # Configuration
 API_BASE_URL = "http://localhost:8000"
 WS_URL = "ws://localhost:8000/ws/motivation"
@@ -143,20 +153,77 @@ def control_video_for_page(page_name):
         return False
 
 def main():
-    st.markdown('<h1 class="main-header">🏥 Edgefit Coach - AI Posture and Fitness Assistant</h1>', unsafe_allow_html=True)
+    # Initialize session state for language
+    if 'selected_language' not in st.session_state:
+        st.session_state.selected_language = 'en'
+    
+    # Get translator instance
+    if TRANSLATION_AVAILABLE:
+        translator = get_translator()
+        translator.set_language(st.session_state.selected_language)
+    
+    # Main title (translated)
+    if TRANSLATION_AVAILABLE:
+        title = t("app_title")
+    else:
+        title = "🏥 Edgefit Coach - AI Posture and Fitness Assistant"
+    
+    st.markdown(f'<h1 class="main-header">{title}</h1>', unsafe_allow_html=True)
     
     # Sidebar navigation
-    st.sidebar.title("🧭 Navigation")
-    page = st.sidebar.selectbox(
-        "Choose a section:",
-        [
+    if TRANSLATION_AVAILABLE:
+        nav_title = t("navigation")
+        choose_section = t("choose_section")
+    else:
+        nav_title = "🧭 Navigation"
+        choose_section = "Choose a section:"
+    
+    st.sidebar.title(nav_title)
+    
+    # Language Selection Section
+    if TRANSLATION_AVAILABLE:
+        st.sidebar.markdown("---")
+        st.sidebar.subheader(f"🌐 {t('language_settings')}")
+        
+        # Create language options with flags and names
+        language_options = {}
+        for code, info in SUPPORTED_LANGUAGES.items():
+            language_options[f"{info['flag']} {info['name']}"] = code
+        
+        selected_display = st.sidebar.selectbox(
+            t("select_language"),
+            options=list(language_options.keys()),
+            index=list(language_options.values()).index(st.session_state.selected_language)
+        )
+        
+        # Update language if changed
+        new_language = language_options[selected_display]
+        if new_language != st.session_state.selected_language:
+            st.session_state.selected_language = new_language
+            translator.set_language(new_language)
+            st.rerun()  # Refresh the page to apply translations
+        
+        st.sidebar.markdown("---")
+    
+    # Navigation menu (translated)
+    if TRANSLATION_AVAILABLE:
+        page_options = [
+            f"📹 {t('live_video')}",
+            f"📊 {t('dashboard')}",
+            f"🤖 {t('chat_interface')}",
+            f"📈 {t('analysis_reports')}",
+            f"🔧 {t('system_status')}"
+        ]
+    else:
+        page_options = [
             "📹 Live Video & Motivation",
             "📊 Dashboard Data",
             "🤖 Chat Interface",
             "📈 Analysis & Reports",
             "🔧 System Status"
         ]
-    )
+    
+    page = st.sidebar.selectbox(choose_section, page_options)
     
     # Auto-control video streaming based on page selection
     if 'current_page' not in st.session_state:
@@ -164,43 +231,94 @@ def main():
     
     # Only control video if page actually changed
     if st.session_state.current_page != page:
-        if page == "📹 Live Video & Motivation":
+        # Determine page type based on content (works for both English and translated)
+        if "📹" in page:  # Live Video page
             with st.spinner("🎬 Preparing video stream..."):
                 control_video_for_page("video")
-        elif page == "📊 Dashboard Data":
+        elif "📊" in page:  # Dashboard page
             with st.spinner("⏸️ Optimizing for dashboard..."):
                 control_video_for_page("dashboard")
-        elif page == "📈 Analysis & Reports":
+        elif "📈" in page:  # Analysis page
             with st.spinner("⏸️ Pausing video for analysis..."):
                 control_video_for_page("analysis")
-        elif page == "🤖 Chat Interface":
+        elif "🤖" in page:  # Chat page
             with st.spinner("⏸️ Pausing video for chat..."):
                 control_video_for_page("chat")
-        elif page == "🔧 System Status":
+        elif "🔧" in page:  # System Status page
             with st.spinner("⏸️ Pausing video for system status..."):
                 control_video_for_page("system")
         else:
             # For any other pages, pause video
-            page_name = page.split()[1].lower() if len(page.split()) > 1 else "other"
             with st.spinner("⏸️ Pausing video stream..."):
-                control_video_for_page(page_name)
+                control_video_for_page("other")
         
         st.session_state.current_page = page
     
-    if page == "📹 Live Video & Motivation":
+    # Route to appropriate page based on emoji (works for all languages)
+    if "📹" in page:
         live_video_page()
-    elif page == "📊 Dashboard Data":
+    elif "📊" in page:
         dashboard_page()
-    elif page == "🤖 Chat Interface":
+    elif "🤖" in page:
         chat_page()
-    elif page == "📈 Analysis & Reports":
+    elif "📈" in page:
         analysis_page()
-    elif page == "🔧 System Status":
+    elif "🔧" in page:
         system_status_page()
 
 
 
 def live_video_page():
+    # Get translated text
+    if TRANSLATION_AVAILABLE:
+        video_control_title = t("video_stream_control")
+        live_stream_title = t("live_video_stream")
+        ai_coach_feed_title = t("ai_coach_feed")
+        connecting_text = t("connecting")
+        start_video_text = t("start_video")
+        stop_video_text = t("stop_video")
+        video_status_text = t("video_status")
+        restart_stream_text = t("restart_stream")
+        stop_stream_text = t("stop_stream")
+        ai_coach_connected_text = t("ai_coach_connected")
+        ai_coach_says_text = t("ai_coach_says")
+        stream_status_running_text = t("stream_status_running")
+        live_pose_detection_text = t("live_pose_detection")
+        ai_coach_statistics_text = t("ai_coach_statistics")
+        total_quotes_text = t("total_quotes")
+        avg_performance_text = t("avg_performance")
+        total_readings_text = t("total_readings")
+        latest_ai_quote_text = t("latest_ai_quote")
+        no_ai_coaching_data_text = t("no_ai_coaching_data")
+        start_video_streaming_text = t("start_video_streaming")
+        good_text = t("good")
+        slouch_text = t("slouch")
+        performance_text = t("performance")
+    else:
+        video_control_title = "Video Stream Control"
+        live_stream_title = "Live Video Stream"
+        ai_coach_feed_title = "Live AI Coach Feed"
+        connecting_text = "Connecting to AI Coach..."
+        start_video_text = "Start Video"
+        stop_video_text = "Stop Video"
+        video_status_text = "Video Status"
+        restart_stream_text = "Restart Stream"
+        stop_stream_text = "Stop Stream"
+        ai_coach_connected_text = "AI Coach Connected - LIVE"
+        ai_coach_says_text = "AI COACH SAYS:"
+        stream_status_running_text = "Stream Status: RUNNING"
+        live_pose_detection_text = "LIVE - Pose Detection Active"
+        ai_coach_statistics_text = "AI Coach Statistics:"
+        total_quotes_text = "Total Quotes"
+        avg_performance_text = "Avg Performance"
+        total_readings_text = "Total Readings"
+        latest_ai_quote_text = "Latest AI quote:"
+        no_ai_coaching_data_text = "No AI coaching data available yet."
+        start_video_streaming_text = "Start video streaming to generate AI coaching quotes."
+        good_text = "Good"
+        slouch_text = "Slouch"
+        performance_text = "Performance"
+    
     st.markdown('<h2 class="section-header"></h2>', unsafe_allow_html=True)
     
     # Show stream resumption status
@@ -246,7 +364,7 @@ def live_video_page():
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("📹 Video Stream Control")
+        st.subheader(f"📹 {video_control_title}")
         
         # Video stream display
         video_placeholder = st.empty()
@@ -260,13 +378,13 @@ def live_video_page():
                 # Use simple MJPEG streaming that works reliably
                 video_placeholder.markdown(f"""
                 <div style="text-align: center; border: 2px solid #1f77b4; border-radius: 10px; padding: 10px;">
-                    <h4>📹 Live Video Stream</h4>
+                    <h4>📹 {live_stream_title}</h4>
                     <img src="{stream_url}" 
                          width="100%" 
                          style="border-radius: 10px; max-width: 640px; height: auto;"
                          alt="Live Video Stream"
                          id="videoStream">
-                    <p><small>🟢 LIVE - Pose Detection Active</small></p>
+                    <p><small>🟢 {live_pose_detection_text}</small></p>
                 </div>
                 """, unsafe_allow_html=True)
             except Exception as e:
@@ -295,7 +413,7 @@ def live_video_page():
         col1a, col1b = st.columns(2)
         
         with col1a:
-            if st.button("🔄 Restart Stream", key="restart_video"):
+            if st.button(f"🔄 {restart_stream_text}", key="restart_video"):
                 with st.spinner("Restarting video stream..."):
                     # Stop first
                     make_api_request("/video/stop")
@@ -310,7 +428,7 @@ def live_video_page():
                         st.error("❌ Failed to restart stream")
         
         with col1b:
-            if st.button("⏹️ Stop Stream", key="stop_video"):
+            if st.button(f"⏹️ {stop_stream_text}", key="stop_video"):
                 with st.spinner("Stopping video stream..."):
                     status_code, response = make_api_request("/video/stop")
                     
@@ -349,7 +467,7 @@ def live_video_page():
         #         st.metric("Total Sessions", metrics.get('total_sessions', 0))
     
     with col2:
-        st.subheader("🤖 Live AI Coach Feed")
+        st.subheader(f"🤖 {ai_coach_feed_title}")
         
         # Live WebSocket Client for real-time AI coaching messages
         st.components.v1.html(f"""
@@ -448,7 +566,7 @@ def live_video_page():
                 
                 ws.onopen = function() {{
                     console.log('🟢 Connected to AI Coach WebSocket');
-                    updateStatus('🟢 AI Coach Connected - LIVE', true);
+                    updateStatus('🟢 {ai_coach_connected_text}', true);
                                             addMessage(`
                             <div style="text-align: center; color: #28a745; font-weight: bold;">
                                 <strong>✅ CONNECTED TO AI COACH!</strong><br>
@@ -477,7 +595,7 @@ def live_video_page():
                                 <div>
                                     <div style="display: flex; align-items: center; margin-bottom: 6px;">
                                         <span style="font-size: 18px; margin-right: 6px;">🤖</span>
-                                        <strong style="color: #1f77b4; font-weight: bold;">AI COACH SAYS:</strong>
+                                        <strong style="color: #1f77b4; font-weight: bold;">{ai_coach_says_text}</strong>
                                         <span style="margin-left: auto; font-size: 11px; opacity: 0.7;">
                                             ${{new Date().toLocaleTimeString()}}
                                         </span>
@@ -486,9 +604,9 @@ def live_video_page():
                                         <em style="font-size: 14px; font-weight: bold;">"${{quote}}"</em>
                                     </div>
                                     <div style="display: flex; gap: 12px; font-size: 11px; font-weight: bold; opacity: 0.8;">
-                                        <span>📊 Good: <strong>${{goodCount}}</strong></span>
-                                        <span>📉 Slouch: <strong>${{slouchCount}}</strong></span>
-                                        <span style="color: ${{perfColor}};">🎯 Performance: <strong>${{percentage}}%</strong></span>
+                                        <span>📊 {good_text}: <strong>${{goodCount}}</strong></span>
+                                        <span>📉 {slouch_text}: <strong>${{slouchCount}}</strong></span>
+                                        <span style="color: ${{perfColor}};">🎯 {performance_text}: <strong>${{percentage}}%</strong></span>
                                     </div>
                                 </div>
                             `, true);
@@ -548,11 +666,12 @@ def live_video_page():
         
         # Show quote statistics
         st.markdown("---")
-        st.markdown("**📊 AI Coach Statistics:**")
+        st.markdown(f"**📊 {ai_coach_statistics_text}**")
         
         try:
-            if os.path.exists("motivation_quotes.json"):
-                with open("motivation_quotes.json", 'r') as f:
+            motivation_file = os.path.join("..", "..", "data", "motivation_quotes.json")
+            if os.path.exists(motivation_file):
+                with open(motivation_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     quotes = data.get('quotes', [])
                     
@@ -568,23 +687,23 @@ def live_video_page():
                         col_stat1, col_stat2, col_stat3 = st.columns(3)
                         
                         with col_stat1:
-                            st.metric("Total Quotes", total_quotes)
+                            st.metric(total_quotes_text, total_quotes)
                         
                         with col_stat2:
-                            st.metric("Avg Performance", f"{avg_performance:.1f}%")
+                            st.metric(avg_performance_text, f"{avg_performance:.1f}%")
                         
                         with col_stat3:
-                            st.metric("Total Readings", total_readings)
+                            st.metric(total_readings_text, total_readings)
                         
                         # Show latest quote timestamp
                         if quotes:
                             latest_quote = quotes[-1]
                             latest_time = latest_quote.get('timestamp', 'Unknown')
-                            st.info(f"🕒 Latest AI quote: {latest_time}")
+                            st.info(f"🕒 {latest_ai_quote_text} {latest_time}")
                     else:
-                        st.info("No AI coaching data available yet.")
+                        st.info(no_ai_coaching_data_text)
             else:
-                st.warning("Start video streaming to generate AI coaching quotes.")
+                st.warning(start_video_streaming_text)
                 
         except Exception as e:
             st.error(f"Error loading statistics: {str(e)}")
@@ -941,13 +1060,25 @@ def dashboard_page():
         st.warning("⚠️ No dashboard data available. Please ensure the posture monitoring system is running.")
 
 def chat_page():
-    st.markdown('<h2 class="section-header">🤖 Chat Interface</h2>', unsafe_allow_html=True)
+    # Get translated text
+    if TRANSLATION_AVAILABLE:
+        chat_interface_title = t("chat_interface")
+        chat_history_title = t("chat_history")
+        send_message_text = t("send_message")
+        clear_history_text = t("clear_history")
+    else:
+        chat_interface_title = "Chat Interface"
+        chat_history_title = "Chat History"
+        send_message_text = "Send Message"
+        clear_history_text = "Clear History"
+    
+    st.markdown(f'<h2 class="section-header">🤖 {chat_interface_title}</h2>', unsafe_allow_html=True)
     
     # Show video stream status
     st.info("⏸️ Video stream paused while using chat interface (optimized performance)")
     
     # Chat history display
-    st.subheader("💬 Chat History")
+    st.subheader(f"💬 {chat_history_title}")
     if st.button("Load Chat History", key="load_chat"):
         with st.spinner("Loading chat history..."):
             status_code, response = make_api_request("/chat/history")
@@ -971,16 +1102,25 @@ def chat_page():
                 st.json(response)
     
     # Send message
-    st.subheader("📝 Send Message")
+    st.subheader(f"📝 {send_message_text}")
     user_message = st.text_area("Enter your message:", placeholder="Ask about posture, ergonomics, or health...")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("Send Message", key="send_message"):
+        if st.button(send_message_text, key="send_message"):
             if user_message.strip():
                 with st.spinner("Sending message..."):
-                    data = {"message": user_message}
+                    # Get current language for multilingual response
+                    target_language = None
+                    if TRANSLATION_AVAILABLE:
+                        translator = get_translator()
+                        target_language = translator.get_current_language()
+                    
+                    data = {
+                        "message": user_message,
+                        "target_language": target_language
+                    }
                     status_code, response = make_api_request("/chat/message", method="POST", data=data)
                     
                     if status_code == 200:
@@ -996,7 +1136,7 @@ def chat_page():
                 st.warning("Please enter a message.")
     
     with col2:
-        if st.button("Clear Chat History", key="clear_chat"):
+        if st.button(clear_history_text, key="clear_chat"):
             with st.spinner("Clearing chat history..."):
                 status_code, response = make_api_request("/chat/history", method="DELETE")
                 
