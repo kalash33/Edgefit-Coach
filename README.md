@@ -7,6 +7,10 @@ Edgefit-Coach is a comprehensive posture monitoring application built for the Qu
 > 📄 **[View Complete Project Presentation: EdgeFit Coach.pdf](./EdgeFit%20Coach.pdf)**  
 > *Comprehensive overview with architecture diagrams, features, and technical specifications*
 
+> 🎥 **[Watch Live Demo: Live Demo Presentation.mp4](https://drive.google.com/file/d/1gv0Hv2sh6jbghxgc2iXLexxYRfdu_8K0/view?usp=sharing)**  
+> *Real-time demonstration of posture monitoring, AI coaching, and system features*
+
+
 ## 🌟 Key Features
 
 ### 🎯 Core Functionality
