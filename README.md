@@ -89,7 +89,7 @@ workspace_slug: "your-workspace"
 
 ```bash
 # Start all components (Recommended)
-python scripts/start_app.py
+python edgefit_coach.py web
 
 # Or start components individually:
 python src/api/websocket_server.py     # Terminal 1
@@ -287,14 +287,6 @@ python src/models/test_model_info.py
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **MediaPipe** - Pose detection framework
-- **FastAPI** - High-performance API framework
-- **Streamlit** - Beautiful web interface framework
-- **ONNX Runtime** - Optimized model inference
-- **Qualcomm** - NPU acceleration support
 
 ## 📞 Support
 
