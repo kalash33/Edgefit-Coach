@@ -4,6 +4,9 @@
 
 Edgefit-Coach is a comprehensive posture monitoring application built for the Qualcomm Edge AI Developer Hackathon. It combines real-time computer vision, AI coaching, and interactive dashboards to help users maintain healthy posture while working.
 
+> 📄 **[View Complete Project Presentation: EdgeFit Coach.pdf](./EdgeFit%20Coach.pdf)**  
+> *Comprehensive overview with architecture diagrams, features, and technical specifications*
+
 ## 🌟 Key Features
 
 ### 🎯 Core Functionality
@@ -97,7 +100,8 @@ Edgefit-Coach/
 ├── 📋 requirements.txt            # Python dependencies
 ├── 📚 API_DOCUMENTATION.md        # Detailed API docs
 ├── 🚀 QUICK_START.md              # Quick setup guide
-└── 📖 STARTUP_GUIDE.md            # Comprehensive startup guide
+├── 📖 STARTUP_GUIDE.md            # Comprehensive startup guide
+└── 📄 EdgeFit Coach.pdf           # Project presentation & overview
 ```
 
 ## 🔌 API Endpoints
@@ -248,6 +252,20 @@ python test_notifications.py
 - **Advanced AI**: More sophisticated posture analysis
 - **Wearable Integration**: Smartwatch and fitness tracker support
 - **Team Features**: Group challenges and leaderboards
+
+## 📋 Documentation
+
+### 📄 Project Presentation
+For a comprehensive overview of the project, including architecture, features, and technical details, see:
+- **[EdgeFit Coach.pdf](EdgeFit%20Coach.pdf)** - Complete project presentation with visual diagrams, use cases, and technical specifications
+
+### 📚 Additional Documentation
+- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Detailed API endpoint documentation
+- **[QUICK_START.md](QUICK_START.md)** - Fast setup and testing guide
+- **[STARTUP_GUIDE.md](STARTUP_GUIDE.md)** - Comprehensive startup instructions
+- **[POSTURE_LOGGING_GUIDE.md](POSTURE_LOGGING_GUIDE.md)** - Posture detection and logging details
+- **[STRETCHING_DETECTION_README.md](STRETCHING_DETECTION_README.md)** - Exercise detection algorithms
+- **[LLM_USAGE.md](LLM_USAGE.md)** - AI integration and usage guide
 
 ## 📄 License
 
