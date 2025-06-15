@@ -1,0 +1,51 @@
+======================================================================
+POSTURE MONITORING REPORT
+======================================================================
+Generated: 2025-06-15 10:28:39
+
+OVERALL QUALITY ASSESSMENT
+----------------------------------------
+Rating: Good 👍
+Overall Score: 78.0/100
+Good Posture: 78.2%
+
+KEY STATISTICS
+----------------------------------------
+Total Sessions: 347
+Total Monitoring Time: 173.5 minutes
+Total Good Posture Readings: 2599
+Total Slouching Readings: 726
+Total Readings: 3325
+
+PERFORMANCE METRICS
+----------------------------------------
+Best Session: 100.0%
+Worst Session: 0.0%
+Average Session: 78.2%
+Consistency Score: 73.4/100
+
+SESSION QUALITY BREAKDOWN
+----------------------------------------
+Excellent Sessions (>=80%): 229
+Good Sessions (50-79%): 74
+Poor Sessions (<50%): 44
+
+Quality Distribution:
+  Excellent: 66.0%
+  Good: 21.3%
+  Poor: 12.7%
+
+IMPROVEMENT TRENDS
+----------------------------------------
+Overall Trend: Improving
+Improvement Rate: 7.1%
+Recent Performance: 75.1% (last 5 sessions)
+
+RECOMMENDATIONS
+----------------------------------------
+1. Good progress! Focus on consistency to reach the next level.
+2. Great improvement trend! Keep up the momentum.
+
+======================================================================
+End of Report
+======================================================================
